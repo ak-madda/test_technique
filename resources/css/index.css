@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Styles pour le drag and drop */
+.drag-over {
+  @apply bg-blue-100 border-2 border-dashed border-blue-400;
+}
+
+/* Animation pour les tâches */
+.task-enter-active,
+.task-leave-active {
+  transition: all 0.3s ease;
+}
+
+.task-enter-from,
+.task-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
