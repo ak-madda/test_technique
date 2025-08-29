@@ -12,6 +12,15 @@ export default defineConfig({
         tailwindcss(),
         vue(),
     ],
+    server: {
+    port: 3000,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+      },
+    },
+  },
     resolve: {
         alias: {
             "vue" : "vue/dist/vue.esm-bundler.js",
