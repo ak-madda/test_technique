@@ -9,15 +9,10 @@ class Project extends Model
 {
     use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'description',
-        'user_id',
+        'user_id'
     ];
 
     public function user()
@@ -28,5 +23,19 @@ class Project extends Model
     public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+
+    /**
+     * SQLite: Gestion des suppressions en cascade manuelle
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($project) {
+            // Supprimer manuellement les tâches associées
+            // car SQLite peut avoir des problèmes avec ON DELETE CASCADE
+            $project->tasks()->delete();
+        });
     }
 }

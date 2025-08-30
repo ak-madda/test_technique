@@ -9,6 +9,25 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    /**
+     * Show the login form.
+     */
+    public function showLogin()
+    {
+        return view('auth.login');
+    }
+
+    /**
+     * Show the registration form.
+     */
+    public function showRegister()
+    {
+        return view('auth.register');
+    }
+
+    /**
+     * Handle user registration.
+     */
     public function register(Request $request)
     {
         $request->validate([
@@ -31,6 +50,9 @@ class AuthController extends Controller
         ], 201);
     }
 
+    /**
+     * Handle user login.
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -40,7 +62,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+        if (!$user || !Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
@@ -54,6 +76,9 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Handle user logout.
+     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

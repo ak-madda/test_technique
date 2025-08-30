@@ -15,11 +15,14 @@ class Task extends Model
         'status',
         'priority',
         'project_id',
-        'assigned_to'
+        'assigned_to',
+        'created_by',
+        'due_date'
     ];
 
     protected $casts = [
-        'due_date' => 'datetime',
+        // SQLite gère différemment les dates
+        'due_date' => 'datetime:Y-m-d H:i:s',
     ];
 
     public function project()
@@ -35,5 +38,26 @@ class Task extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * SQLite: Valider que les enum sont corrects
+     */
+    public function setStatusAttribute($value)
+    {
+        $allowed = ['pending', 'in_progress', 'completed'];
+        if (!in_array($value, $allowed)) {
+            throw new \InvalidArgumentException("Status must be one of: " . implode(', ', $allowed));
+        }
+        $this->attributes['status'] = $value;
+    }
+
+    public function setPriorityAttribute($value)
+    {
+        $allowed = ['low', 'medium', 'high'];
+        if (!in_array($value, $allowed)) {
+            throw new \InvalidArgumentException("Priority must be one of: " . implode(', ', $allowed));
+        }
+        $this->attributes['priority'] = $value;
     }
 }

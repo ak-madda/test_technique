@@ -96,6 +96,19 @@ return [
             'search_path' => 'public',
             'sslmode' => 'prefer',
         ],
+        'sqlite' => [
+    'driver' => 'sqlite',
+    'url' => env('DATABASE_URL'),
+    'database' => env('DB_DATABASE', database_path('database.sqlite')),
+    'prefix' => '',
+    'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
+    
+    // Options spécifiques à SQLite pour de meilleures performances
+    'options' => extension_loaded('pdo_sqlite') ? array_filter([
+        PDO::ATTR_PERSISTENT => env('DB_PERSISTENT', false),
+        PDO::ATTR_TIMEOUT => env('DB_TIMEOUT', 30),
+    ]) : [],
+        ],
 
         'sqlsrv' => [
             'driver' => 'sqlsrv',

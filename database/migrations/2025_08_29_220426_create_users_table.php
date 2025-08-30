@@ -3,10 +3,13 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
+        // SQLite a des limitations différentes de MySQL
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -16,6 +19,11 @@ return new class extends Migration {
             $table->rememberToken();
             $table->timestamps();
         });
+
+        // Pour SQLite, on doit parfois désactiver les foreign keys
+        if (DB::connection()->getDriverName() === 'sqlite') {
+            DB::statement('PRAGMA foreign_keys=ON;');
+        }
     }
 
     public function down(): void
