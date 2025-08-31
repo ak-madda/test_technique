@@ -39,6 +39,11 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard')->middleware('auth');
 
+// Catch-all route for Vue Router
+Route::get('/{any}', function () {
+    return view('app');
+})->where('any', '.*');
+
 // Fallback route for undefined routes
 Route::fallback(function () {
     return response()->view('errors.404', [], 404);

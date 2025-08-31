@@ -1,77 +1,44 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore } from '../stores/auth'
-
-// Pages
-import Login from '../pages/Login.vue'
-import Register from '../pages/Register.vue'
-import Dashboard from '../pages/Dashboard.vue'
-import ProjectDetail from '../pages/ProjectDetail.vue'
-import ProjectForm from '../pages/ProjectForm.vue'
+import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login,
-    meta: { requiresGuest: true }
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: Register,
-    meta: { requiresGuest: true }
-  },
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: Dashboard,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/projects/create',
-    name: 'ProjectCreate',
-    component: ProjectForm,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/projects/:id/edit',
-    name: 'ProjectEdit',
-    component: ProjectForm,
-    meta: { requiresAuth: true },
-    props: true
-  },
-  {
-    path: '/projects/:id',
-    name: 'ProjectDetail',
-    component: ProjectDetail,
-    meta: { requiresAuth: true },
-    props: true
-  },
-  {
-    path: '/',
-    redirect: '/dashboard'
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    redirect: '/dashboard'
-  }
-]
+    {
+        path: '/',
+        redirect: '/dashboard'
+    },
+    {
+        path: '/login',
+        name: 'login',
+        component: () => import('../views/LoginView.vue'),
+        meta: { guest: true }
+    },
+    {
+        path: '/dashboard',
+        name: 'dashboard',
+        component: () => import('../views/DashboardView.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
+        path: '/projects/:id',
+        name: 'project-detail',
+        component: () => import('../views/ProjectDetailView.vue'),
+        meta: { requiresAuth: true }
+    }
+];
 
 const router = createRouter({
-  history: createWebHistory(),
-  routes
-})
+    history: createWebHistory(),
+    routes
+});
 
 router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore()
-  
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next('/login')
-  } else if (to.meta.requiresGuest && authStore.isAuthenticated) {
-    next('/dashboard')
-  } else {
-    next()
-  }
-})
+    const token = localStorage.getItem('token');
+    if (to.meta.requiresAuth && !token) {
+        next('/login');
+    } else if (to.meta.guest && token) {
+        next('/dashboard');
+    } else {
+        next();
+    }
+});
 
-export default router
+export default router;
