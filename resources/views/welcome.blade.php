@@ -151,8 +151,8 @@
 
         <div class="cta-buttons">
             <a href="{{ route('tasks.index') }}" class="btn btn-primary">Get Started</a>
-            <a href="#" class="btn btn-secondary">Sign In</a>
-            <!-- <a href="{{ route('login') }}" class="btn btn-secondary">Sign In</a>-->
+           <!-- <a href="#" class="btn btn-secondary">Sign In</a> -->
+            <a href="{{ route('login') }}" class="btn btn-secondary">Sign In</a>
         </div>
 
         <div class="tech-stack">
