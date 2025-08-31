@@ -23,4 +23,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('tasks');
     }
-};
+};php artisan migrate:fresh --seed
